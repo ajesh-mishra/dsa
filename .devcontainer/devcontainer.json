@@ -1,0 +1,37 @@
+{
+  "name": "dsa",
+  "image": "python:3.12-slim",
+  "workspaceFolder": "/workspace",
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.black-formatter",
+        "ms-python.isort",
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ajesh-mishra.stealth",
+        "usernamehw.errorlens",
+        "tamasfe.even-better-toml"
+      ],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.inlineSuggest.enabled": false,
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "[python]": {
+          "editor.defaultFormatter": "ms-python.black-formatter"
+        },
+        "python.analysis.typeCheckingMode": "basic",
+        "python.formatting.provider": "black",
+        "python.sortImports.args": [
+          "--profile",
+          "black"
+        ]
+      }
+    }
+  },
+  "updateRemoteUserUID": true
+}
