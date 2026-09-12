@@ -39,31 +39,46 @@ def create_list(nums: list[int]) -> ListNode | None:
 def create_circular_list(nums: list[int]) -> ListNode | None:
     n: ListNode | None = None
     l: ListNode | None = None
+    f: ListNode | None = None
 
     for i, v in enumerate(nums[::-1]):
         ln = ListNode(val=v, next=n)
-        if i == 0:
+        if i == 2:
             l = ln
+        if i == 0:
+            f = ln
         n = ln
 
-    if l:
-        l.next = n
+    if f:
+        f.next = l
 
     return n
 
 
-def has_cycle(head: ListNode | None) -> bool:
+def detect_cycle(head: ListNode | None) -> ListNode | None:
     slow = fast = head
 
     while slow is not None and fast is not None and fast.next is not None:
         slow = slow.next
         fast = fast.next.next
-        if slow is fast:
-            return True
 
-    return False
+        if slow and slow is fast:
+            slow = head
+            break
+
+    while slow is not None and fast is not None:
+        slow = slow.next
+        fast = fast.next
+
+        if slow and slow is fast:
+            return slow
+
+    return None
 
 
 if __name__ == "__main__":
-    assert has_cycle(head=create_list([1, 2, 3, 4])) == False
-    assert has_cycle(head=create_circular_list([1, 2, 3, 4])) == True
+    assert detect_cycle(head=create_list([1, 2, 3, 4, 5])) == None
+    
+    node = detect_cycle(head=create_circular_list([1, 2, 3, 4, 5]))
+    assert node is not None
+    assert node.val == 3
