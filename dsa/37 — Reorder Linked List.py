@@ -13,8 +13,7 @@ class ListNode:
         return str(self.val) if self is not None else None
 
     def show(self):
-        current = self
-        seen = set()
+        current, seen = self, set()
 
         while current is not None:
             if id(current) in seen:
@@ -36,45 +35,49 @@ def create_list(nums: list[int]) -> ListNode | None:
     return n
 
 
-def remove_nth_from_end(head: ListNode | None, n: int) -> ListNode | None:
-    dummy = ListNode(next=head)
-
-    slow = fast = dummy
-
-    for _ in range(n):
-        if fast is None:
-            return head
-        fast = fast.next
-
+def reorder_linked_list(head: ListNode | None) -> ListNode | None:
+    # Find the middle
+    slow = fast = head
     while slow and fast and fast.next:
         slow = slow.next
-        fast = fast.next
+        fast = fast.next.next
 
-    if slow and slow.next:
-        slow.next = slow.next.next
+    head2 = None
+    if slow:
+        head2 = slow.next
+        slow.next = None
+
+    # Reverse a linked list
+    rev_head = None
+    while head2:
+        n = head2.next
+        head2.next = rev_head
+        rev_head = head2
+        head2 = n
+
+    # Merge/rearrange two lists
+    dummy = ListNode()
+    tail = dummy
+    while head and rev_head:
+        tail.next = head
+        head = head.next
+        tail.next.next = rev_head
+        tail = tail.next.next
+        rev_head = rev_head.next
+
+    if head and tail:
+        tail.next = head
 
     return dummy.next
 
 
 if __name__ == "__main__":
+    head = reorder_linked_list(head=create_list([1, 2, 3, 4]))
     print("Linked List:")
-    head = remove_nth_from_end(head=create_list([1, 2, 3, 4, 5]), n=2)
     if head:
         head.show()
 
+    head = reorder_linked_list(head=create_list([1, 2, 3, 4, 5]))
     print("Linked List:")
-    head = remove_nth_from_end(
-        head=create_list([1, 2, 3, 4, 5, 6, 7, 8, 9, 0, -1, 8]), n=4
-    )
-    if head:
-        head.show()
-
-    print("Linked List:")
-    head = remove_nth_from_end(head=create_list([1, 2]), n=1)
-    if head:
-        head.show()
-
-    print("Linked List:")
-    head = remove_nth_from_end(head=create_list([1, 2]), n=10)
     if head:
         head.show()
